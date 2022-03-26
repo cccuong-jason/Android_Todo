@@ -44,4 +44,8 @@
     <string name="back">Back</string>
     <string name="update_task">Update Task</string>
     <string name="subtasks">Subtasks</string>
+    <string name="delete_todo">Delete Todo</string>
+    <string name="update_todo">Update Todo</string>
+    <string name="general_fab">General Fab</string>
+    <string name="new_tags">New Tags</string>
 </resources>

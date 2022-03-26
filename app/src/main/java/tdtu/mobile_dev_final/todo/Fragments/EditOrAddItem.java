@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -58,6 +60,8 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
     TextInputLayout tlTagsAddName;
     ChipGroup updateTagsChipGroup;
     UpdateTodoItemActivity itemDetailActivity;
+//    FloatingActionButton fabGeneral, fabUpdate, fabDelete;
+//    Animation fabOpen, fabClose, rotateForward, rotateBackward;
     RecyclerView rvTaskList;
     RecyclerView.RecycledViewPool sharepool;
     LottieAnimationView swStatus;
@@ -69,7 +73,7 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
     Todo itemDetailObject;
     Context context;
     Calendar calendar;
-    Boolean show;
+    Boolean show, isOpen;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,29 +135,42 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         tiUpdateEndDate.setOnClickListener(this);
         btnAddTags.setOnClickListener(this);
         swStatus.setOnClickListener(this);
+//        fabGeneral.setOnClickListener(this);
 
         return view;
     }
 
     public void init() {
+        itemDetailActivity = (UpdateTodoItemActivity) getActivity();
+
         tiUpdateTitle = view.findViewById(R.id.tiUpdateTitle);
         tiUpdateDescription = view.findViewById(R.id.tiUpdateDescription);
         tiUpdateStartDate = view.findViewById(R.id.tiUpdateStartDate);
         tiUpdateEndDate = view.findViewById(R.id.tiUpdateEndDate);
-        itemDetailActivity = (UpdateTodoItemActivity) getActivity();
         updateTagsChipGroup = view.findViewById(R.id.updateTagsChipGroup);
         rvTaskList = view.findViewById(R.id.tvTaskList);
-        sharepool = new RecyclerView.RecycledViewPool();
         btnAddTags = view.findViewById(R.id.btnAddTags);
         tlTagsAddName = view.findViewById(R.id.tlTagsNameAdd);
         swStatus = view.findViewById(R.id.swTags);
         tiTagsNameAdd = view.findViewById(R.id.tiTagsNameAdd);
+//        fabGeneral = view.findViewById(R.id.fabGeneral);
+//        fabUpdate = view.findViewById(R.id.fabUpdate);
+//        fabDelete = view.findViewById(R.id.fabDelete);
+
         bundle = itemDetailActivity.getMyData();
-        show = false;
         itemDetail = bundle.getString("todoItem");
         gson = new Gson();
         itemDetailObject = gson.fromJson(itemDetail, Todo.class);
+
+        sharepool = new RecyclerView.RecycledViewPool();
         calendar = Calendar.getInstance();
+        show = false;
+        isOpen = false;
+
+//        fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open);
+//        fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close);
+//        rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward);
+//        rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -182,9 +199,11 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         case R.id.tiUpdateStartDate:
             datePicker(tiUpdateStartDate);
             break;
+
         case R.id.tiUpdateEndDate:
             datePicker(tiUpdateEndDate);
             break;
+
         case R.id.btnAddTags:
 
             if (show) {
@@ -204,6 +223,7 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
                 }
             });
             break;
+
         case R.id.swTags:
 
             Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
@@ -216,9 +236,36 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
                 swStatus.playAnimation();
                 itemDetailObject.setStatus(true);
             }
+            break;
 
-            Log.i("LottieStatus", String.valueOf(itemDetailObject.getStatus()));
-
+//        case R.id.fabGeneral:
+//            animateFab();
+//            break;
+//
+//        case R.id.fabDelete:
+//            // Delete
+//            break;
+//
+//        case R.id.fabUpdate:
+//            // Update
+//            break;
+        }
     }
-}
+//    private void animateFab() {
+//        if (isOpen) {
+//            fabGeneral.startAnimation(rotateForward);
+//            fabUpdate.startAnimation(fabClose);
+//            fabDelete.startAnimation(fabClose);
+//            fabUpdate.setClickable(false);
+//            fabDelete.setClickable(false);
+//            isOpen = false;
+//        } else {
+//            fabGeneral.startAnimation(rotateBackward);
+//            fabUpdate.startAnimation(fabOpen);
+//            fabDelete.startAnimation(fabOpen);
+//            fabUpdate.setClickable(true);
+//            fabDelete.setClickable(true);
+//            isOpen = true;
+//        }
+//    }
 }
