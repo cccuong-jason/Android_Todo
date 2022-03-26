@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/todoItemCard"
+        android:layout_width="378dp"
+        android:layout_height="152dp"
+        app:cardCornerRadius="10dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient"
+            android:padding="5dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--<com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEdit"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:iconTint="@color/overlay"
+                    android:layout_marginEnd="8dp"
+                    app:icon="@drawable/ic_edit"
+                    android:backgroundTint="@color/title"
+                    android:textAllCaps="false"
+                    android:textColor="@color/overlay"
+                    app:cornerRadius="5dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintVertical_bias="0.909" />-->
+
+                <!--                <com.google.android.material.button.MaterialButton-->
+                <!--                    android:id="@+id/btnCheck"-->
+                <!--                    style="@style/Widget.MaterialComponents.Button.Icon"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    android:layout_height="50dp"-->
+                <!--                    app:iconTint="@color/overlay"-->
+                <!--                    app:icon="@drawable/ic_check"-->
+                <!--                    android:backgroundTint="@color/title"-->
+                <!--                    android:textAllCaps="false"-->
+                <!--                    android:textColor="@color/overlay"-->
+                <!--                    app:cornerRadius="5dp"-->
+                <!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    app:layout_constraintEnd_toStartOf="@+id/btnEdit"-->
+                <!--                    app:layout_constraintHorizontal_bias="0.953"-->
+                <!--                    app:layout_constraintStart_toEndOf="@+id/timeEstimation"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/tvTodoDetailTitle"-->
+                <!--                    app:layout_constraintVertical_bias="0.909" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tvCreatedDate"-->
+<!--                    style="@style/Widget.MaterialComponents.Button.Icon"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="39dp"-->
+<!--                    android:backgroundTint="#1e3572"-->
+<!--                    android:drawableStart="@drawable/ic_calendar"-->
+<!--                    android:drawablePadding="2dp"-->
+<!--                    android:drawableTint="@color/overlay"-->
+<!--                    android:fontFamily="@font/poppins_regular"-->
+<!--                    android:textColor="@color/overlay"-->
+<!--                    app:icon="@drawable/ic_clock"-->
+<!--                    app:iconSize="20dp"-->
+<!--                    app:iconTint="@color/title"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toStartOf="@+id/timeEstimation"-->
+<!--                    app:layout_constraintHorizontal_bias="0.0"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tvTodoDetailTitle"-->
+<!--                    app:layout_constraintVertical_bias="1.0" />-->
+
+                <TextView
+                    android:id="@+id/timeEstimation"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="39dp"
+                    android:backgroundTint="#1e3572"
+                    android:drawableStart="@drawable/ic_clock"
+                    android:drawablePadding="3dp"
+                    android:drawableTint="@color/overlay"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textAllCaps="false"
+                    android:textColor="@color/overlay"
+                    app:cornerRadius="50dp"
+                    app:icon="@drawable/ic_clock"
+                    app:iconSize="20dp"
+                    app:iconTint="@color/overlay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/tvTodoDetailTitle"
+                    android:layout_width="264dp"
+                    android:layout_height="68dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_black"
+                    android:maxLines="2"
+
+                    android:padding="10dp"
+                    android:text="Agora-web Display election detail during voting"
+                    android:textColor="@color/overlay"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.741" />
+
+                <HorizontalScrollView
+                    android:layout_width="271dp"
+                    android:layout_height="56dp"
+                    app:layout_constraintBottom_toTopOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        app:singleLine="true">
+
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_marginStart="1dp"
+                    android:background="@color/overlay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintStart_toEndOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout"
+                    android:layout_width="85dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvDaysOfWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="WED"
+                        android:textAlignment="center"
+                        android:textColor="@color/overlay"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="09"
+                        android:textAlignment="center"
+                        android:textColor="@color/title"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                    <TextView
+                        android:id="@+id/tvMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="DEC"
+                        android:textAlignment="center"
+                        android:textColor="@color/overlay"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                </RelativeLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:animateLayoutChanges="true"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".Fragments.EditOrAddItem">
+
+
+    <RelativeLayout
+        android:animateLayoutChanges="true"
+        android:id="@+id/updateRelativeLayout"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tlUpdateTitle"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:boxCornerRadiusBottomEnd="5dp"
+            app:boxCornerRadiusBottomStart="5dp"
+            app:boxCornerRadiusTopEnd="5dp"
+            app:endIconDrawable="@drawable/ic_edit"
+            app:endIconTint="@color/title"
+            app:boxCornerRadiusTopStart="5dp"
+            app:boxStrokeColor="@color/title"
+            app:boxStrokeWidth="0dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:inputType="text"
+                android:id="@+id/tiUpdateTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:backgroundTint="@color/overlay"
+                android:fontFamily="@font/poppins_bold"
+                android:textColor="#5c606e" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:id="@+id/nestedScrollView"
+            android:layout_below="@id/tlUpdateTitle"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlUpdateDescription"
+                android:layout_width="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:boxCornerRadiusTopEnd="5dp"
+                app:boxCornerRadiusTopStart="5dp"
+                app:boxStrokeColor="@color/title"
+                app:boxStrokeWidth="0dp"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:lines="5"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/tiUpdateDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:scrollbarStyle="insideInset"
+                    android:ems="10"
+                    android:scrollbars="vertical"
+                    android:backgroundTint="@color/overlay"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="#5c606e" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <LinearLayout
+            android:id="@+id/deadlineLabel"
+            android:layout_width="fill_parent"
+            android:layout_below="@id/nestedScrollView"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:weightSum="2"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@color/textColor"
+                android:layout_height="wrap_content"
+                android:text="@string/start_date_label"
+                android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/textColor"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:text="@string/end_date_label"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/deadlineInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/deadlineLabel"
+            android:baselineAligned="false"
+            android:layout_marginTop="-5dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlUpdateStartDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="-10dp"
+                android:layout_weight="1"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:startIconTint="@color/title"
+                app:startIconDrawable="@drawable/ic_calendar_start"
+                app:boxCornerRadiusTopEnd="5dp"
+                app:boxCornerRadiusTopStart="5dp"
+                app:boxStrokeColor="@color/title"
+                app:boxStrokeWidth="0dp"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiUpdateStartDate"
+                    android:layout_width="match_parent"
+                    android:drawableStart="@drawable/ic_calendar_start"
+                    android:inputType="datetime"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:backgroundTint="@color/overlay"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="#5c606e" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tlUpdateEndDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:boxCornerRadiusTopEnd="5dp"
+                app:startIconTint="@color/title"
+                app:startIconDrawable="@drawable/ic_calendar_end"
+                app:boxCornerRadiusTopStart="5dp"
+                app:boxStrokeColor="@color/title"
+                app:boxStrokeWidth="0dp"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiUpdateEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="datetime"
+                    android:layout_marginHorizontal="20dp"
+                    android:textSize="16sp"
+                    android:backgroundTint="@color/overlay"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="#5c606e" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tagsUpdateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/deadlineInput"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/tags"
+            android:textColor="@color/textColor"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/tagsUpdateInput"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tagsUpdateLabel"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="20dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/btnAddTags"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="10dp"
+                android:layout_weight="0.5"
+                android:fontFamily="@font/poppins_regular"
+                android:padding="20dp"
+                app:backgroundTint="@color/title"
+                app:icon="@drawable/ic_add"
+                app:iconSize="18dp"
+                app:iconTint="@color/overlay" />
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1.5">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/updateTagsChipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true">
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+
+        </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:layout_below="@id/tagsUpdateInput"
+                android:id="@+id/tlTagsNameAdd"
+                android:layout_width="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content"
+                app:boxCornerRadiusBottomEnd="5dp"
+                app:boxCornerRadiusBottomStart="5dp"
+                app:boxCornerRadiusTopEnd="5dp"
+                android:layout_marginHorizontal="20dp"
+                app:boxCornerRadiusTopStart="5dp"
+                app:boxStrokeColor="@color/title"
+                app:startIconDrawable="@drawable/ic_tags"
+                app:endIconDrawable="@drawable/ic_check"
+                app:endIconMode="custom"
+                app:endIconTint="@color/title"
+                app:startIconTint="@color/title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tiTagsNameAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:backgroundTint="@color/overlay"
+                    android:fontFamily="@font/poppins_regular"
+                    android:inputType="text"
+                    android:textColor="#5c606e"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:id="@+id/statusLabel"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTaskList"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.9"
+                android:fontFamily="@font/poppins_regular"
+                android:text="@string/task_done_or_not"
+                android:textColor="@color/textColor"
+                android:textSize="16sp" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/swTags"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.1"
+                android:scaleX="1.3"
+                android:scaleY="1.3"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/switch_todo_1" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/subtaskUpdateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tlTagsNameAdd"
+            android:layout_centerInParent="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_regular"
+            android:text="@string/subtasks"
+            android:textColor="@color/textColor"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:id="@+id/tvTaskList"
+            android:layout_marginHorizontal="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_below="@id/subtaskUpdateLabel"
+            >
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+
+</FrameLayout>
