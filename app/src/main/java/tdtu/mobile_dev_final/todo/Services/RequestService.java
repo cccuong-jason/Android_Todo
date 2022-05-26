@@ -2,9 +2,11 @@ package tdtu.mobile_dev_final.todo.Services;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -13,6 +15,7 @@ import com.android.volley.ParseError;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
@@ -27,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import tdtu.mobile_dev_final.todo.RequestSingleton;
 import tdtu.mobile_dev_final.todo.Todo;
 import tdtu.mobile_dev_final.todo.Utils.ToolsFunction;
@@ -40,6 +44,7 @@ public class RequestService {
     private JSONArray jsonArray;
     private String accessToken, refreshToken;
     private JSONObject paginatorInfo;
+    private String type;
 
     public JSONObject getPaginatorInfo() {
         return paginatorInfo;
@@ -48,12 +53,21 @@ public class RequestService {
     ToolsFunction toolsFunction = new ToolsFunction();
     Gson gson = new Gson();
 
-    public RequestService(RequestQueue requestQueue, String requestUrl, String requestMethod, String requestAccessToken, String requestRefreshToken) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public RequestService(RequestQueue requestQueue, String requestUrl, String requestMethod, String requestAccessToken, String requestRefreshToken, String type) {
         this.queue = requestQueue;
         this.url = requestUrl;
         this.method = requestMethod;
         this.accessToken = requestAccessToken;
         this.refreshToken = requestRefreshToken;
+        this.type = type;
     }
 
     public RequestQueue getQueue() {
@@ -111,6 +125,45 @@ public class RequestService {
     public final void makeRequest(Context context) {
         SharedPreferences sp = context.getSharedPreferences("TodoPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+        JSONObject jsonBody = new JSONObject();
+
+        if (type == "EditTodo") {
+            try {
+                String name = sp.getString("updateTitle", "");
+                String description = sp.getString("updateDescription", "");
+                String startDate = sp.getString("updateStartDate", "");
+                String endDate = sp.getString("updateEndDate", "");
+
+                boolean status = sp.getBoolean("updateStatus", false);
+
+                if (!TextUtils.isEmpty(name)) {
+                    jsonBody.put("name", name);
+                }
+
+                if (!TextUtils.isEmpty(description)) {
+                    jsonBody.put("description", description);
+                }
+
+                if (!TextUtils.isEmpty(startDate)) {
+                    jsonBody.put("startDate", startDate);
+                }
+
+                if (!TextUtils.isEmpty(endDate)) {
+                    jsonBody.put("endDate", endDate);
+                }
+
+                if (status) {
+                    jsonBody.put("status", status);
+                }
+
+                Log.i("FinalJson", jsonBody.toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        final String requestBody = jsonBody.toString();
 
         JsonObjectRequest objectRequest = new JsonObjectRequest(toolsFunction.getRequestMethod(method), url, null,
                 new Response.Listener<JSONObject>() {
@@ -126,15 +179,31 @@ public class RequestService {
                                 toolsFunction.setToken(context, x_access_token);
                             }
 
-                            jsonArray =  response.getJSONArray("content");
-                            paginatorInfo = (JSONObject) jsonArray.remove(8);
-                            listTodo = Todo.mapData(jsonArray);
+                            if (type == "AllTodo") {
+                                jsonArray =  response.getJSONArray("content");
+                                paginatorInfo = (JSONObject) jsonArray.remove(jsonArray.length() -1);
+                                listTodo = Todo.mapData(jsonArray);
 
-                            Log.i("PaginatorInfoIn", String.valueOf(paginatorInfo));
+                                editor.putString("todoListItem", gson.toJson(listTodo)) ;
+                                editor.putString("paginator", gson.toJson(paginatorInfo));
+                                editor.apply();
+                            } else if (type == "EditTodo") {
+                                String message =  response.getString("type");
+                                Integer code = response.getInt("code");
 
-                            editor.putString("todoListItem", gson.toJson(listTodo)) ;
-                            editor.putString("paginator", gson.toJson(paginatorInfo));
-                            editor.apply();
+                                if (code.equals(200)) {
+                                    new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                                            .setTitleText("Successfully!")
+                                            .setContentText("Update successfully!")
+                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sDialog) {
+                                                    sDialog.dismissWithAnimation();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -164,6 +233,24 @@ public class RequestService {
             }
 
             @Override
+            public byte[] getBody() {
+                try {
+                    return requestBody == null ? null : requestBody.getBytes("utf-8");
+                } catch (UnsupportedEncodingException uee) {
+                    VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                    return null;
+                }
+            }
+
+//            @Nullable
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<String, String>();
+////                params.put("", "");
+////                params.put("")
+//            }
+
+            @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                 try {
                     String jsonString = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -186,3 +273,4 @@ public class RequestService {
         RequestSingleton.getInstance(context).addToRequestQueue(objectRequest);
     }
 }
+

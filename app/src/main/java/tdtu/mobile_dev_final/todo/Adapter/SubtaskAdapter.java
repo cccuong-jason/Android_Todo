@@ -14,7 +14,6 @@ import com.airbnb.lottie.LottieAnimationView;
 
 import java.util.List;
 
-import tdtu.mobile_dev_final.todo.DashboardActivity;
 import tdtu.mobile_dev_final.todo.R;
 import tdtu.mobile_dev_final.todo.SubTask;
 

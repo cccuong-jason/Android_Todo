@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/navigation_groups"
+        android:checkableBehavior="single"
+        >
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/nav_home"
+            android:icon="@drawable/ic_home"/>
+
+        <item
+            android:id="@+id/nav_calendar"
+            android:title="@string/calendar_view"
+            android:icon="@drawable/ic_calendar"/>
+
+        <item
+            android:id="@+id/nav_remain"
+            android:title="@string/remain_todos"
+            android:icon="@drawable/ic_remain"/>
+
+        <item
+            android:id="@+id/nav_done"
+            android:title="@string/done_todos"
+            android:icon="@drawable/ic_archive"/>
+
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:title="Profile">
+            <menu>
+                <item android:id="@+id/navLogin" android:title="@string/nav_login" android:icon="@drawable/ic_login"/>
+                <item android:id="@+id/navLogout" android:title="@string/nav_logout" android:icon="@drawable/ic_logout"/>
+                <item android:id="@+id/navProfile" android:title="@string/nav_profile" android:icon="@drawable/ic_profile"/>
+            </menu>
+
+        </item>
+
+    </group>
+</menu>

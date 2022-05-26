@@ -3,12 +3,8 @@ package tdtu.mobile_dev_final.todo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -102,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                         new Runnable() {
                             public void run() {
                                 btnLogin.revertAnimation();
-                                Intent splash = new Intent(LoginActivity.this, DashboardActivity.class);
+                                Intent splash = new Intent(LoginActivity.this, HomeScreen.class);
                                 startActivity(splash);
                                 Animatoo.animateFade(LoginActivity.this);
                             }
@@ -119,8 +115,14 @@ public class LoginActivity extends AppCompatActivity {
         JSONObject jsonBody = new JSONObject();
 
         try {
-            jsonBody.put("email", textInputEmail.getText().toString());
-            jsonBody.put("password", textInputPassword.getText().toString());
+//            String email = textInputEmail.getText().toString();
+//            String password = textInputPassword.getText().toString();
+
+            String email = "kangcer133@gmail.com";
+            String password = "chungchicuong";
+
+            jsonBody.put("email", email);
+            jsonBody.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -138,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             editor.putString("accessToken", accessToken);
                             editor.putString("refreshToken", refreshToken);
-                            editor.commit();
+                            editor.apply();
 
                             new startAnimation().execute();
 

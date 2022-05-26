@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/todoItemCard"
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        app:cardCornerRadius="10dp"
+        android:layout_marginHorizontal="10dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#B3B3B3"
+            android:padding="5dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:paddingHorizontal="10dp"
+                android:layout_height="match_parent">
+
+
+                <TextView
+                    android:id="@+id/timeEstimation"
+                    android:layout_width="100dp"
+                    android:layout_height="15dp"
+                    android:background="@drawable/shimmer_background"
+                    android:backgroundTint="@color/white"
+                    android:drawablePadding="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintVertical_bias="0.3" />
+
+                <TextView
+                    android:id="@+id/tvTodoDetailTitle"
+                    android:layout_width="264dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shimmer_background"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_black"
+                    android:maxLines="2"
+
+                    android:padding="10dp"
+                    android:textColor="@color/overlay"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <HorizontalScrollView
+                    android:layout_width="268dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/shimmer_background"
+                    app:layout_constraintBottom_toTopOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.35">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        app:singleLine="true">
+
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:layout_marginStart="1dp"
+                    android:background="@color/overlay"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+                    app:layout_constraintStart_toEndOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RelativeLayout
+                    android:paddingHorizontal="10dp"
+                    android:id="@+id/relativeLayout"
+                    android:paddingVertical="10dp"
+                    android:layout_marginVertical="5dp"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/shimmer_background"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toEndOf="@+id/tvTodoDetailTitle"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tvDaysOfWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/white"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/overlay"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/title"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                    <TextView
+                        android:id="@+id/tvMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textAlignment="center"
+                        android:textColor="@color/overlay"
+                        android:textSize="20sp"
+                        tools:layout_editor_absoluteX="126dp"
+                        tools:layout_editor_absoluteY="147dp" />
+
+                </RelativeLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

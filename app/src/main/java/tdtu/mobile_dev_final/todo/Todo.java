@@ -151,7 +151,6 @@ public class Todo {
 
             try {
                 gsonTodo = new Gson().fromJson(resultList.get(i).toString(), Todo.class);
-                Log.i("GSONSubtask", String.valueOf(gsonTodo.taskList));
                 todo.setName(gsonTodo.name);
                 todo.setAvatar(gsonTodo.avatar);
                 todo.setDescription(gsonTodo.description);

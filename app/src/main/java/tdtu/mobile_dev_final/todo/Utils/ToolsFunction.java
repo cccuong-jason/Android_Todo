@@ -74,6 +74,8 @@ public class ToolsFunction extends FragmentActivity {
                 return Request.Method.POST;
             case "PATCH":
                 return Request.Method.PATCH;
+            case "PUT":
+                return Request.Method.PUT;
             case "DELETE":
                 return  Request.Method.DELETE;
             default:

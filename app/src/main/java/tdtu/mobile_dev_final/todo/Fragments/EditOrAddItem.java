@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,19 +56,18 @@ import tdtu.mobile_dev_final.todo.Todo;
 import tdtu.mobile_dev_final.todo.UpdateTodoItemActivity;
 import tdtu.mobile_dev_final.todo.Utils.ToolsFunction;
 
-public class EditOrAddItem extends Fragment implements View.OnClickListener {
+public class EditOrAddItem extends Fragment implements View.OnClickListener, View.OnFocusChangeListener{
 
     View view;
     TextInputEditText tiUpdateTitle, tiUpdateDescription, tiUpdateStartDate, tiUpdateEndDate, tiTagsNameAdd;
     TextInputLayout tlTagsAddName;
     ChipGroup updateTagsChipGroup;
     UpdateTodoItemActivity itemDetailActivity;
-//    FloatingActionButton fabGeneral, fabUpdate, fabDelete;
-//    Animation fabOpen, fabClose, rotateForward, rotateBackward;
     RecyclerView rvTaskList;
     RecyclerView.RecycledViewPool sharepool;
     LottieAnimationView swStatus;
     MaterialButton btnAddTags;
+    SharedPreferences sp;
     List<SubTask> subTaskList;
     Bundle bundle;
     String itemDetail;
@@ -74,6 +76,7 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
     Context context;
     Calendar calendar;
     Boolean show, isOpen;
+    IEditItemOrAddData iEditItemOrAddData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,13 +85,15 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.update_todo_item, container, false);
         context = container.getContext();
         @SuppressLint("SimpleDateFormat") SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        SimpleDateFormat stringFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("vi-VN"));
+        SimpleDateFormat stringFormat = new SimpleDateFormat("dd-MM-yyyy", new Locale("vi-VN"));
+
         init();
 
         tiUpdateTitle.setText(itemDetailObject.getName());
         tiUpdateDescription.setText(itemDetailObject.getDescription());
 
         tiUpdateDescription.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (view.getId() == R.id.tiUpdateDescription) {
@@ -135,10 +140,30 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         tiUpdateEndDate.setOnClickListener(this);
         btnAddTags.setOnClickListener(this);
         swStatus.setOnClickListener(this);
-//        fabGeneral.setOnClickListener(this);
+
+        tiUpdateTitle.setOnFocusChangeListener(this);
+        tiUpdateDescription.setOnFocusChangeListener(this);
+
+//        updateData();
 
         return view;
     }
+
+//    public void updateData() {
+//
+//
+//        Log.i("TitleName", tiUpdateTitle.getText().toString());
+//        String title = tiUpdateTitle.getText().toString();
+//        String description = tiUpdateDescription.getText().toString();
+//        String startDate, endDate = null ;
+//        try {
+//            startDate =
+//            endDate = outputFormat.format(Objects.requireNonNull(inputFormat.parse(tiUpdateEndDate.getText().toString())));
+//            editOrAddItem.revertData(title, description, startDate, endDate);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void init() {
         itemDetailActivity = (UpdateTodoItemActivity) getActivity();
@@ -150,12 +175,10 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         updateTagsChipGroup = view.findViewById(R.id.updateTagsChipGroup);
         rvTaskList = view.findViewById(R.id.tvTaskList);
         btnAddTags = view.findViewById(R.id.btnAddTags);
+
         tlTagsAddName = view.findViewById(R.id.tlTagsNameAdd);
         swStatus = view.findViewById(R.id.swTags);
         tiTagsNameAdd = view.findViewById(R.id.tiTagsNameAdd);
-//        fabGeneral = view.findViewById(R.id.fabGeneral);
-//        fabUpdate = view.findViewById(R.id.fabUpdate);
-//        fabDelete = view.findViewById(R.id.fabDelete);
 
         bundle = itemDetailActivity.getMyData();
         itemDetail = bundle.getString("todoItem");
@@ -167,14 +190,12 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
         show = false;
         isOpen = false;
 
-//        fabOpen = AnimationUtils.loadAnimation(context, R.anim.fab_open);
-//        fabClose = AnimationUtils.loadAnimation(context, R.anim.fab_close);
-//        rotateForward = AnimationUtils.loadAnimation(context, R.anim.rotate_forward);
-//        rotateBackward = AnimationUtils.loadAnimation(context, R.anim.rotate_backward);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void datePicker(TextInputEditText textInputEditText) {
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd-MM-yyyy", new Locale("vi-VN"));
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -183,11 +204,50 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String date = day + "/" + month + "/" + year;
+                String date = day + "-" + month + "-" + year;
                 textInputEditText.setText(date);
+                try {
+                    if (textInputEditText.getId() == R.id.tiUpdateStartDate) {
+                        iEditItemOrAddData.getStartDate(outputFormat.format(Objects.requireNonNull(inputFormat.parse(date))));
+                    } else {
+                        iEditItemOrAddData.getEndDate(outputFormat.format(Objects.requireNonNull(inputFormat.parse(date))));
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }, year, month, day);
         datePickerDialog.show();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        iEditItemOrAddData = (IEditItemOrAddData) context;
+        sp = context.getSharedPreferences("TodoPrefs", Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void onFocusChange(View view, boolean b) {
+        if (!b) {
+            switch (view.getId()) {
+                case R.id.tiUpdateTitle:
+                    iEditItemOrAddData.getTitle(tiUpdateTitle.getText().toString());
+
+                case R.id.tiUpdateDescription:
+                    iEditItemOrAddData.getDescription(tiUpdateDescription.getText().toString());
+            }
+        }
+    }
+
+    public interface IEditItemOrAddData {
+        void getTitle(String title);
+        void getDescription(String description);
+        void getStartDate(String startDate);
+        void getEndDate(String endDate);
+        void getTags(List<String> tags);
+        void getSubTask(ArrayList<String> subTask);
+        void getStatus(boolean status);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -218,6 +278,8 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
                 public void onClick(View view) {
 
                     updateTagsChipGroup.addView(ToolsFunction.makeChip(context, tiTagsNameAdd.getText().toString().trim()));
+                    itemDetailObject.getTags().add(tiTagsNameAdd.getText().toString().trim());
+                    iEditItemOrAddData.getTags(itemDetailObject.getTags());
                     tlTagsAddName.setVisibility(View.GONE);
                     show = false;
                 }
@@ -226,7 +288,6 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
 
         case R.id.swTags:
 
-            Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
             if (itemDetailObject.getStatus()) {
                 swStatus.setMinAndMaxProgress(0.5f, 1.0f);
                 swStatus.playAnimation();
@@ -236,36 +297,8 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener {
                 swStatus.playAnimation();
                 itemDetailObject.setStatus(true);
             }
+            iEditItemOrAddData.getStatus(itemDetailObject.getStatus());
             break;
-
-//        case R.id.fabGeneral:
-//            animateFab();
-//            break;
-//
-//        case R.id.fabDelete:
-//            // Delete
-//            break;
-//
-//        case R.id.fabUpdate:
-//            // Update
-//            break;
         }
     }
-//    private void animateFab() {
-//        if (isOpen) {
-//            fabGeneral.startAnimation(rotateForward);
-//            fabUpdate.startAnimation(fabClose);
-//            fabDelete.startAnimation(fabClose);
-//            fabUpdate.setClickable(false);
-//            fabDelete.setClickable(false);
-//            isOpen = false;
-//        } else {
-//            fabGeneral.startAnimation(rotateBackward);
-//            fabUpdate.startAnimation(fabOpen);
-//            fabDelete.startAnimation(fabOpen);
-//            fabUpdate.setClickable(true);
-//            fabDelete.setClickable(true);
-//            isOpen = true;
-//        }
-//    }
 }
