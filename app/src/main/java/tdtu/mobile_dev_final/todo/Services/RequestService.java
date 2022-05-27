@@ -19,12 +19,15 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +35,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import tdtu.mobile_dev_final.todo.RequestSingleton;
+import tdtu.mobile_dev_final.todo.SubTask;
 import tdtu.mobile_dev_final.todo.Todo;
 import tdtu.mobile_dev_final.todo.Utils.ToolsFunction;
 
@@ -127,7 +131,7 @@ public class RequestService {
         SharedPreferences.Editor editor = sp.edit();
         JSONObject jsonBody = new JSONObject();
 
-        if (type == "EditTodo") {
+        if (type.equals("EditTodo")) {
             try {
                 String name = sp.getString("updateTitle", "");
                 String description = sp.getString("updateDescription", "");
@@ -161,6 +165,31 @@ public class RequestService {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        } else if (type.equals("CreateTodo")) {
+            String name = sp.getString("createName", "");
+            String description = sp.getString("createDescription", "");
+            String startDate = sp.getString("createStartDate", "");
+            String endDate = sp.getString("createEndDate", "");
+            List<String> tags = loadTags("tag", sp);
+            List<JSONObject> subTaskList = loadTask("subTask", sp);
+
+            try {
+                jsonBody.put("name", name);
+                jsonBody.put("description", description);
+                jsonBody.put("startDate", startDate);
+                jsonBody.put("endDate", endDate);
+                jsonBody.put("status", false);
+                jsonBody.put("tags", new JSONArray(tags));
+                jsonBody.put("taskList", new JSONArray(subTaskList));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (type.equals("EditTodoFalse")) {
+            try {
+                jsonBody.put("status", false);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         final String requestBody = jsonBody.toString();
@@ -179,29 +208,72 @@ public class RequestService {
                                 toolsFunction.setToken(context, x_access_token);
                             }
 
-                            if (type == "AllTodo") {
-                                jsonArray =  response.getJSONArray("content");
-                                paginatorInfo = (JSONObject) jsonArray.remove(jsonArray.length() -1);
-                                listTodo = Todo.mapData(jsonArray);
+                            switch (type) {
+                                case "AllTodo":
+                                    jsonArray = response.getJSONArray("content");
+                                    Log.i("JsonArraySize", String.valueOf(jsonArray.length()));
+                                    paginatorInfo = (JSONObject) jsonArray.remove(jsonArray.length() - 1);
+                                    listTodo = Todo.mapData(jsonArray);
 
-                                editor.putString("todoListItem", gson.toJson(listTodo)) ;
-                                editor.putString("paginator", gson.toJson(paginatorInfo));
-                                editor.apply();
-                            } else if (type == "EditTodo") {
-                                String message =  response.getString("type");
-                                Integer code = response.getInt("code");
+                                    Log.i("ListTodoRequest", String.valueOf(listTodo.size()));
 
-                                if (code.equals(200)) {
-                                    new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
-                                            .setTitleText("Successfully!")
-                                            .setContentText("Update successfully!")
-                                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sDialog) {
-                                                    sDialog.dismissWithAnimation();
-                                                }
-                                            })
-                                            .show();
+                                    editor.remove("todoListItem").apply();;
+                                    editor.remove("paginator").apply();;
+
+                                    editor.putString("todoListItem", gson.toJson(listTodo));
+                                    editor.putString("paginator", gson.toJson(paginatorInfo));
+                                    editor.apply();
+                                    break;
+                                case "EditTodo": {
+                                    Integer code = response.getInt("code");
+
+                                    if (code.equals(200)) {
+                                        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText("Successfully!")
+                                                .setContentText("Update successfully!")
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sDialog) {
+                                                        sDialog.dismissWithAnimation();
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                    break;
+                                }
+                                case "CreateTodo": {
+                                    Integer code = response.getInt("code");
+
+                                    if (code.equals(201)) {
+                                        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText("Successfully!")
+                                                .setContentText("Create Todo successfully!")
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sDialog) {
+                                                        sDialog.dismissWithAnimation();
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                    break;
+                                }
+                                case "EditTodoFalse": {
+                                    Integer code = response.getInt("code");
+
+                                    if (code.equals(200)) {
+                                        new SweetAlertDialog(context, SweetAlertDialog.SUCCESS_TYPE)
+                                                .setTitleText("Successfully!")
+                                                .setContentText("Undo Todo successfully!")
+                                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sDialog) {
+                                                        sDialog.dismissWithAnimation();
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                    break;
                                 }
                             }
 
@@ -271,6 +343,28 @@ public class RequestService {
         };
 
         RequestSingleton.getInstance(context).addToRequestQueue(objectRequest);
+    }
+
+    public List<String> loadTags(String arrayName, SharedPreferences sp) {
+       List<String> tags = new ArrayList<>();
+       int size = sp.getInt(arrayName + "_size", 0);
+       for (int i=0; i< size; i++) {
+           tags.add(sp.getString(arrayName + "_" + i, ""));
+       }
+
+       return tags;
+    }
+
+    public List<JSONObject> loadTask(String arrayName, SharedPreferences sp) {
+       List<JSONObject> subTaskList = new ArrayList<>();
+        int size = sp.getInt(arrayName + "_size", 0);
+        Gson gson = new Gson();
+        Type type = new TypeToken<SubTask>() {}.getType();
+        for (int i=0; i< size; i++) {
+            SubTask taskItem = gson.fromJson(sp.getString(arrayName + "_" + i, ""), type);
+            subTaskList.add(taskItem.toJsonObject());
+        }
+        return subTaskList;
     }
 }
 

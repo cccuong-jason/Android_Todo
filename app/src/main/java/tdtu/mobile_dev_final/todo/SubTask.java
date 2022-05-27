@@ -1,5 +1,8 @@
 package tdtu.mobile_dev_final.todo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class SubTask {
     public String name;
     public String id;
@@ -43,5 +46,19 @@ public class SubTask {
         this.id = id;
         this.description = description;
         this.status = status;
+    }
+
+    public SubTask () {}
+
+    public JSONObject toJsonObject() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("description", description);
+            jsonObject.put("status", false);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 import tdtu.mobile_dev_final.todo.R;
@@ -85,5 +87,4 @@ public class SubtaskAdapter extends RecyclerView.Adapter<SubtaskAdapter.SubtaskA
             lottieAnimationView = itemView.findViewById(R.id.cbSubtask);
         }
     }
-
 }

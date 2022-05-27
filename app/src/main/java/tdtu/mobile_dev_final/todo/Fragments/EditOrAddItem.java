@@ -297,6 +297,7 @@ public class EditOrAddItem extends Fragment implements View.OnClickListener, Vie
                 swStatus.playAnimation();
                 itemDetailObject.setStatus(true);
             }
+            Log.i("StatusEdit", String.valueOf(itemDetailObject.getStatus()));
             iEditItemOrAddData.getStatus(itemDetailObject.getStatus());
             break;
         }

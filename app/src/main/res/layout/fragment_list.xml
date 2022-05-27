@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         >
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/calendarAppBar"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,6 +27,77 @@
                 app:textColorSelected="#FFFF"/>
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/tvYourtask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_black"
+            android:text="Ongoing Task"
+            android:textColor="@color/cardColor"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCount"
+            app:layout_constraintHorizontal_bias="0.076"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarAppBar" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCount"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="53dp"
+            android:layout_height="38dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="@font/poppins_black"
+            android:textAlignment="center"
+            android:textColor="@color/title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/calendarAppBar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTodoList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:visibility="gone"
+            android:layout_marginVertical="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvYourtask" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayoutHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:animationCache="true"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvYourtask"
+            app:shimmer_repeat_mode="restart"
+            app:shimmer_shape="radial"
+            tools:layout_editor_absoluteX="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/shimmer_todo" />
+
+                <include layout="@layout/shimmer_todo" />
+
+                <include layout="@layout/shimmer_todo" />
+
+                <include layout="@layout/shimmer_todo" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.core.widget.NestedScrollView>

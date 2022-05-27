@@ -12,8 +12,12 @@ import android.os.Looper;
 import android.view.Window;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
+import tdtu.mobile_dev_final.todo.Fragments.CreateFragment;
 import tdtu.mobile_dev_final.todo.Fragments.ListFragment;
 
 public class HomeScreen extends AppCompatActivity {
@@ -43,9 +47,9 @@ public class HomeScreen extends AppCompatActivity {
                     case 1:
                         replace(new ListFragment());
                         break;
-//                    case 2:
-//                        replace(new FavoriteFragment());
-//                        break;
+                    case 2:
+                        replace(new CreateFragment());
+                        break;
 //                    case 3:
 //                        replace(new AccountFragment());
 //                        break;

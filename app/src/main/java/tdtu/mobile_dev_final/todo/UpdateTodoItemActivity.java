@@ -36,12 +36,8 @@ public class UpdateTodoItemActivity extends AppCompatActivity implements View.On
     Todo itemDetail;
     MaterialButton  btnBack, btnUpdate, btnDelete;
     SharedPreferences sp;
-    String title, description, startDate, endDate;
-    List<String> tags;
     String accessToken, refreshToken;
-    ArrayList<String> listTask;
     SharedPreferences.Editor editor;
-    boolean status;
 
 
     @Override

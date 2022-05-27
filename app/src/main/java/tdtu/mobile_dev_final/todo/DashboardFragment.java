@@ -59,18 +59,20 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
     String accessToken, refreshToken;
     List<Todo> listTodo;
     RecyclerView rvTodos;
+    RecyclerView.RecycledViewPool sharedPool;
     ToolsFunction toolsFunction;
     TodoAdapter adapter;
+    ShimmerFrameLayout shimmerFrameLayout;
     TextView tvTaskProgress, tvProgressBar;
     CircularProgressBar taskProgressBar;
     CircleImageView profileImage;
     MaterialButton btnCount;
     ItemTouchHelper.SimpleCallback simpleCallback;
+    JSONObject paginatorInfo;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
-    ShimmerFrameLayout shimmerFrameLayout;
     View view;
-    RecyclerView.RecycledViewPool sharedPool;
+    Context context;
     Gson gson = new Gson();
     SmoothBottomBar bottomNav;
     Animation slideUp, slideDown;
@@ -79,6 +81,7 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.dashboard_activity, container, false);
+        context = container.getContext();
         return view;
     }
 
@@ -121,10 +124,17 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
                         listTodo.remove(deletedTodo);
                         adapter.notifyItemRemoved(position);
 
+                        try {
+                            makeProgressTask(listTodo, paginatorInfo);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         Todo finalDeletedTodo = deletedTodo;
                         Snackbar.make(rvTodos, deletedTodo.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                updateTodoFalse(finalDeletedTodo.getId());
                                 listTodo.add(position, finalDeletedTodo);
                                 adapter.notifyItemInserted(position);
                             }
@@ -140,12 +150,12 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
             public void onChildDraw (@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive){
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
                         .addSwipeLeftActionIcon(R.drawable.ic_checklist)
-                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(requireContext(), R.color.pastelGreen))
+                        .addSwipeLeftBackgroundColor(ContextCompat.getColor(context, R.color.pastelGreen))
                         .addSwipeLeftLabel("Done Task")
-                        .setSwipeLeftActionIconTint(ContextCompat.getColor(requireContext(), R.color.doneText))
-                        .setSwipeLeftLabelColor(ContextCompat.getColor(requireContext(), R.color.doneText))
+                        .setSwipeLeftActionIconTint(ContextCompat.getColor(context, R.color.doneText))
+                        .setSwipeLeftLabelColor(ContextCompat.getColor(context, R.color.doneText))
                         .setSwipeLeftLabelTextSize(TypedValue.COMPLEX_UNIT_DIP, 24)
-                        .setSwipeLeftLabelTypeface(ResourcesCompat.getFont(requireContext(), R.font.poppins_bold))
+                        .setSwipeLeftLabelTypeface(ResourcesCompat.getFont(context, R.font.poppins_bold))
                         .create()
                         .decorate();
 
@@ -190,8 +200,8 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
         toolsFunction = new ToolsFunction();
         btnCount = view.findViewById(R.id.btnCount);
         bottomNav = view.findViewById(R.id.bottomAppBar);
-        slideUp = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up_animation);
-        slideDown = AnimationUtils.loadAnimation(getContext(), R.anim.slide_down_animation);
+        slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_up_animation);
+        slideDown = AnimationUtils.loadAnimation(context, R.anim.slide_down_animation);
         profileImage = view.findViewById(R.id.profileImage);
         swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         shimmerFrameLayout = view.findViewById(R.id.shimmerLayoutHorizontal);
@@ -208,24 +218,23 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
                 }
             }
 
-
             String displayTaskProgress = String.valueOf(completeTodo) + '/' + String.valueOf(paginatorInfo.getInt("itemCount"));
             SpannableString ss = new SpannableString(displayTaskProgress);
             ss.setSpan(R.color.title, 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            int progressBar = Math.round(Math.round((float)completeTodo/paginatorInfo.getInt("itemCount") * 100));
+            int progressBar = Math.round(Math.round((float)completeTodo/listTodo.size() * 100));
 
             tvTaskProgress.setText(ss + " Task", TextView.BufferType.SPANNABLE);
             tvProgressBar.setText(String.valueOf(progressBar) + "%\nDone");
             tvProgressBar.setTextColor(ColorStateList.valueOf(DashboardFragment.this.getResources().getColor(R.color.title)));
 
             taskProgressBar.setProgress(progressBar);
-            btnCount.setText(String.valueOf(paginatorInfo.getInt("itemCount")));
-
+            btnCount.setText(String.valueOf(listTodo.size()));
     }
 
     public void getAllTask() throws JSONException {
-        RequestQueue queue = RequestSingleton.getInstance(getContext()).getRequestQueue();
+
+        RequestQueue queue = RequestSingleton.getInstance(requireContext()).getRequestQueue();
         String url = "http://192.168.1.212:8000/api/todos?page=1&status=false";
 
         RequestService requestService = new RequestService(queue, url, "GET", accessToken, refreshToken,"AllTodo");
@@ -234,31 +243,32 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
 
         Type type = new TypeToken<List<Todo>>() {}.getType();
         Type paginatorType = new TypeToken<JSONObject>() {}.getType();
-        String listTodoString = sp.getString("todoListItem", "");
-
-
 
         try {
-            listTodo = gson.fromJson(listTodoString, type);
 
-            JSONObject paginatorInfo = gson.fromJson(sp.getString("paginator", ""), paginatorType);
-
-            makeProgressTask(listTodo, paginatorInfo);
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    String listTodoString = sp.getString("todoListItem", "");
+                    listTodo = gson.fromJson(listTodoString, type);
+                    paginatorInfo = gson.fromJson(sp.getString("paginator", ""), paginatorType);
+                    try {
+                        makeProgressTask(listTodo, paginatorInfo);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
                     rvTodos.setVisibility(View.VISIBLE);
 
-                    adapter = new TodoAdapter(requireContext(), listTodo, DashboardFragment.this);
-                    rvTodos.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    adapter = new TodoAdapter(context, listTodo, DashboardFragment.this);
+                    rvTodos.setLayoutManager(new LinearLayoutManager(context));
                     rvTodos.setRecycledViewPool(sharedPool);
                     rvTodos.setNestedScrollingEnabled(false);
                     rvTodos.setAdapter(adapter);
                 }
-            }, 2000);
+            }, 1500);
 
 
         } catch (Exception e) {
@@ -275,11 +285,19 @@ public class DashboardFragment extends Fragment implements TodoAdapter.OnTodoLis
         requestService.makeRequest(requireContext());
     }
 
+    public void updateTodoFalse(String id) {
+        RequestQueue queue = RequestSingleton.getInstance(requireContext()).getRequestQueue();
+        String url = "http://192.168.1.212:8000/api/todos/" + id;
+
+        RequestService requestService = new RequestService(queue, url, "PATCH", accessToken, refreshToken,"EditTodoFalse");
+        requestService.makeRequest(requireContext());
+    }
+
     @Override
     public void onTodoClick(int position) {
 
         Todo t = listTodo.get(position);
-        Intent itemDetail = new Intent(requireContext(), ItemDetail.class);
+        Intent itemDetail = new Intent(context, ItemDetail.class);
         itemDetail.putExtra("itemDetail", gson.toJson(t));
         startActivity(itemDetail);
     }
